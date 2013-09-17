@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Examples &mdash; jsonconf v0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="jsonconf v0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Documentation" href="documentation.html" />
+    <link rel="prev" title="Installation" href="installation.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="documentation.html" title="Documentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">jsonconf v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="examples">
+<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h1>
+<p>This page contains several examples of how to use jsonconf.</p>
+<div class="section" id="parsing-command-line-arguments">
+<h2>Parsing command line arguments<a class="headerlink" href="#parsing-command-line-arguments" title="Permalink to this headline">¶</a></h2>
+<p>Here is an example of parsing command line arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">jsonconf</span> <span class="kn">import</span> <span class="n">CommandLineParser</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">CommandLineParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+
+    <span class="k">print</span> <span class="s">&quot;Program: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">parser</span><span class="o">.</span><span class="n">getProgram</span><span class="p">()</span>
+    <span class="k">print</span>
+
+    <span class="k">print</span> <span class="s">&quot;Keyword arguments:&quot;</span>
+    <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">getKeywordArguments</span><span class="p">()</span><span class="o">.</span><span class="n">iteritems</span><span class="p">():</span>
+        <span class="k">print</span> <span class="s">&quot;    [</span><span class="si">%s</span><span class="s">]: </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">print</span>
+
+    <span class="k">print</span> <span class="s">&quot;Extra arguments:&quot;</span>
+    <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">parser</span><span class="o">.</span><span class="n">getExtraArguments</span><span class="p">():</span>
+        <span class="k">print</span> <span class="s">&quot;    </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="n">arg</span>
+</pre></div>
+</div>
+<p>Which has the following output:</p>
+<div class="highlight-python"><pre>$ python basicExample.py
+Program: basicExample.py
+
+Keyword arguments:
+
+Extra arguments:
+
+
+# python basicExample.py arg1 arg2 key1=123
+Program: basicExample.py
+
+Keyword arguments:
+    [key1]: 123
+
+Extra arguments:
+    arg1
+    arg2
+
+
+# python basicExample.py hello=world 1=2 verbose flag special1234
+Program: basicExample.py
+
+Keyword arguments:
+    [1]: 2
+    [hello]: world
+
+Extra arguments:
+    verbose
+    flag
+    special12345</pre>
+</div>
+<p>Here is an example of specifying command line arguments:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">jsonconf</span> <span class="kn">import</span> <span class="n">CommandLineParser</span>
+
+
+<span class="k">def</span> <span class="nf">getVerbose</span><span class="p">(</span><span class="n">value</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">value</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s">&quot;true&quot;</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">CommandLineParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">convertKey</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">convertKey</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">requireKey</span><span class="p">(</span><span class="s">&quot;verbose&quot;</span><span class="p">,</span> <span class="n">getVerbose</span><span class="p">)</span>
+
+    <span class="n">parser</span><span class="o">.</span><span class="n">parse</span><span class="p">()</span>
+
+    <span class="n">name</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;name&quot;</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;port&quot;</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;verbose&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">&quot;name: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="n">name</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;port: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">port</span><span class="p">),</span> <span class="n">port</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;verbose: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">verbose</span><span class="p">),</span> <span class="n">verbose</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which has the following behavior:</p>
+<div class="highlight-python"><pre>$ python required.py
+Traceback (most recent call last):
+  File "required.py", line 14, in &lt;module&gt;
+    parser.parse()
+  File "/usr/local/lib/python2.6/dist-packages/jsonconf-0.0.1-py2.6.egg/jsonconf/commandLine.py", line 142, in parse
+    raise Exception("Missing required key: %s" % key)
+Exception: Missing required key: verbose
+
+$ python required.py verbose=123
+name: &lt;type 'NoneType'&gt;, None
+port: &lt;type 'int'&gt;, -1
+verbose: &lt;type 'bool'&gt;, False
+
+$ python required.py verbose=true name=example port=100
+name: &lt;type 'str'&gt;, example
+port: &lt;type 'int'&gt;, 100
+verbose: &lt;type 'bool'&gt;, True</pre>
+</div>
+<p>Several command line variables can also be grouped, or renamed as such:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">jsonconf</span> <span class="kn">import</span> <span class="n">CommandLineParser</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">CommandLineParser</span><span class="p">()</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">renameKeys</span><span class="p">(</span><span class="s">&quot;verbose&quot;</span><span class="p">,</span> <span class="p">[</span><span class="s">&quot;-v&quot;</span><span class="p">,</span> <span class="s">&quot;--verbose&quot;</span><span class="p">,</span> <span class="s">&quot;verbose&quot;</span><span class="p">])</span>
+    <span class="k">print</span> <span class="n">parser</span><span class="o">.</span><span class="n">getExtraArguments</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Which has the following behavior:</p>
+<div class="highlight-python"><pre>$ python testRename.py
+[]
+
+$ python testRename.py --verbose
+["verbose"]
+
+$ python testRename.py -v
+["verbose"]
+
+$ python testRename.py verbose
+["verbose"]
+
+$ python testRename.py --verbose -v verbose
+["verbose"]</pre>
+</div>
+<p>This provides the ability to add aliases for a specific piece of functionality
+so that it can be configured via many different command line arguments. This is
+most useful in grouping single dash and double dash flags (e.g., -v and &#8211;verbose).</p>
+</div>
+<div class="section" id="parsing-configuration-files">
+<h2>Parsing configuration files<a class="headerlink" href="#parsing-configuration-files" title="Permalink to this headline">¶</a></h2>
+<p>Here is an example of loading a JSON configuration file:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">jsonconf</span> <span class="kn">import</span> <span class="n">ConfigFile</span>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Contents of file:</span>
+
+<span class="sd">    {</span>
+<span class="sd">        &quot;verbose&quot;: false,</span>
+<span class="sd">        &quot;logLevel&quot;: 100,</span>
+<span class="sd">        &quot;logFile&quot;: &quot;/tmp/myProgram.log&quot;</span>
+<span class="sd">    }</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigFile</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">verbose</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;verbose&quot;</span><span class="p">)</span>
+    <span class="n">logLevel</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;logLevel&quot;</span><span class="p">)</span>
+    <span class="n">logFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;logFile&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">&quot;verbose: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">verbose</span><span class="p">),</span> <span class="n">verbose</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;logLevel: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">logLevel</span><span class="p">),</span> <span class="n">logLevel</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;logFile: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">logFile</span><span class="p">),</span> <span class="n">logFile</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This script prints the following:</p>
+<div class="highlight-python"><pre>$ python testConfig.py
+verbose: &lt;type 'bool'&gt;, False
+logLevel: &lt;type 'int'&gt;, 100
+logFile: &lt;type 'unicode'&gt;, /tmp/myProgram.log</pre>
+</div>
+<p>Here is an example with complex data:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">jsonconf</span> <span class="kn">import</span> <span class="n">ConfigFile</span>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Contents of file:</span>
+
+<span class="sd">    {</span>
+<span class="sd">        &quot;general&quot;: {</span>
+<span class="sd">            &quot;logging&quot;: {</span>
+<span class="sd">                &quot;level&quot;: 100,</span>
+<span class="sd">                &quot;file&quot;: &quot;/tmp/program.log&quot;</span>
+<span class="sd">            }</span>
+<span class="sd">        },</span>
+<span class="sd">        &quot;networking&quot;: {</span>
+<span class="sd">            &quot;host&quot;: &quot;127.0.0.1&quot;,</span>
+<span class="sd">            &quot;port&quot;: 100</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">ConfigFile</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">logLevel</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;general.logging.level&quot;</span><span class="p">)</span>
+    <span class="n">logFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;general.logging.file&quot;</span><span class="p">)</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;networking.host&quot;</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;networking.port&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">&quot;Logging: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logLevel</span><span class="p">,</span> <span class="n">logFile</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;Networking: </span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which has the following output:</p>
+<div class="highlight-python"><pre>$ python complexTest.py
+Logging: 100, /tmp/program.log
+Networking: 127.0.0.1:100</pre>
+</div>
+</div>
+<div class="section" id="putting-it-all-together">
+<h2>Putting it all together<a class="headerlink" href="#putting-it-all-together" title="Permalink to this headline">¶</a></h2>
+<p>The following demonstrates the basic usage a JsonConfig:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">jsonconf</span> <span class="kn">import</span> <span class="n">JsonConfig</span>
+
+
+<span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">Contents of the file:</span>
+
+<span class="sd">    {</span>
+<span class="sd">        &quot;general&quot;: {</span>
+<span class="sd">            &quot;logging&quot;: {</span>
+<span class="sd">                &quot;level&quot;: 100,</span>
+<span class="sd">                &quot;file&quot;: &quot;/tmp/program.log&quot;</span>
+<span class="sd">            }</span>
+<span class="sd">        },</span>
+<span class="sd">        &quot;networking&quot;: {</span>
+<span class="sd">            &quot;host&quot;: &quot;127.0.0.1&quot;,</span>
+<span class="sd">            &quot;port&quot;: 100</span>
+<span class="sd">        }</span>
+<span class="sd">    }</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="k">if</span> <span class="n">__name__</span> <span class="o">==</span> <span class="s">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">config</span> <span class="o">=</span> <span class="n">JsonConfig</span><span class="p">()</span>
+    <span class="n">config</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+    <span class="n">logLevel</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;general.logging.level&quot;</span><span class="p">)</span>
+    <span class="n">logFile</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;general.logging.file&quot;</span><span class="p">)</span>
+    <span class="n">host</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;networking.host&quot;</span><span class="p">)</span>
+    <span class="n">port</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&quot;networking.port&quot;</span><span class="p">)</span>
+
+    <span class="k">print</span> <span class="s">&quot;Logging: </span><span class="si">%s</span><span class="s">, </span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logLevel</span><span class="p">,</span> <span class="n">logFile</span><span class="p">)</span>
+    <span class="k">print</span> <span class="s">&quot;Networking: </span><span class="si">%s</span><span class="s">:</span><span class="si">%s</span><span class="s">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Which has the following behavior:</p>
+<div class="highlight-python"><pre>$ python basicJson.py
+Logging: 100, /tmp/program.log
+Networking: 127.0.0.1:100
+
+$ python basicJson.py general.logging.level=0 networking.host=localhost
+Logging: 0, /tmp/program.log
+Networking: localhost:100</pre>
+</div>
+<p>The JsonConfig class provides the ability to specify command line arguments to
+override the configuration options present in a JSON configuration file.</p>
+<p>The JSON configuration file can also be specified from the command line
+arguments in any of the following ways:</p>
+<div class="highlight-python"><pre>$ python config.py --config-file=/tmp/config.json
+$ python config.py -c=/tmp/config.json</pre>
+</div>
+<p>This command line argument overrides the filename passed to
+the <a class="reference internal" href="documentation.html#jsonconf.JsonConfig.parse" title="jsonconf.JsonConfig.parse"><tt class="xref py py-func docutils literal"><span class="pre">jsonconf.JsonConfig.parse()</span></tt></a> function.</p>
+<p>For further information, please see the documentation on the specific classes.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Examples</a><ul>
+<li><a class="reference internal" href="#parsing-command-line-arguments">Parsing command line arguments</a></li>
+<li><a class="reference internal" href="#parsing-configuration-files">Parsing configuration files</a></li>
+<li><a class="reference internal" href="#putting-it-all-together">Putting it all together</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="installation.html"
+                        title="previous chapter">Installation</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="documentation.html"
+                        title="next chapter">Documentation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/examples.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" size="18" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="documentation.html" title="Documentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="installation.html" title="Installation"
+             >previous</a> |</li>
+        <li><a href="index.html">jsonconf v0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Brett Ponsler.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.0.1.
+    </div>
+  </body>
+</html>
